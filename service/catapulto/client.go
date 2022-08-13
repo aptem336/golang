@@ -1,6 +1,8 @@
 package catapulto
 
 import (
+	"encoding/json"
+	"golang/service/catapulto/api"
 	"net/http"
 )
 
@@ -15,7 +17,35 @@ func NewClient(
 	xToken string,
 ) *Client {
 	return &Client{
-		baseURL: baseURL,
-		xToken:  xToken,
+		HTTPClient: &http.Client{},
+		baseURL:    baseURL,
+		xToken:     xToken,
 	}
+}
+
+func (client *Client) GetLocalityList(localityRequest *api.LocalityRequest) ([]api.LocalityResponse, error) {
+	req, err := http.NewRequest(
+		http.MethodGet,
+		client.baseURL+"/geo/locality/search/?term="+localityRequest.Term+"&iso="+localityRequest.ISO,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	res, err := client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	var localityList []api.LocalityResponse
+	err = json.NewDecoder(res.Body).Decode(&localityList)
+	if err != nil {
+		return nil, err
+	}
+	err = res.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	return localityList, nil
 }
