@@ -1,16 +1,12 @@
 package api
 
 type LocalityRequest struct {
-	Term  string `json:"term"`
-	ISO   string `json:"iso"`
+	Term  string `json:"term,omitempty"`
+	ISO   string `json:"iso,omitempty"`
 	Limit int    `json:"limit,omitempty"`
 }
 
 type LocalityResponse struct {
-	LocalityList []Locality
-}
-
-type Locality struct {
 	Id          string `json:"id"`
 	Region1     string `json:"region_1"`
 	Region1Type string `json:"region1_type"`
