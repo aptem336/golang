@@ -12,6 +12,15 @@ func main() {
 		"https://api.catapulto.ru/api/v1",
 		"",
 	)
+	authResponse, err := client.GetAuthToken(&api.AuthRequest{
+		Username: "",
+		Password: "",
+	})
+	if err != nil {
+		fmt.Printf("can't get localityList: %s", err)
+		os.Exit(1)
+	}
+	fmt.Print(authResponse)
 	localityList, err := client.GetLocalityList(&api.LocalityRequest{
 		Term:  "Казань",
 		ISO:   "RU",
