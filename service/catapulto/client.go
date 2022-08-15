@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"golang/service/catapulto/api"
+	"io"
+	"log"
 	"net/http"
 )
 
@@ -45,16 +47,21 @@ func (client *Client) GetAuthToken(authRequest *api.AuthRequest) (*api.AuthRespo
 		return nil, err
 	}
 	res, err := client.HTTPClient.Do(req)
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatalf(
+				"error while response body closing: %s",
+				err,
+			)
+		}
+	}(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	var authResponse *api.AuthResponse
 	err = json.NewDecoder(res.Body).Decode(&authResponse)
-	if err != nil {
-		return nil, err
-	}
-	err = res.Body.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -79,16 +86,21 @@ func (client *Client) GetLocalityList(localityRequest *api.LocalityRequest) ([]a
 		return nil, err
 	}
 	res, err := client.HTTPClient.Do(req)
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatalf(
+				"error while response body closing: %s",
+				err,
+			)
+		}
+	}(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	var localityList []api.LocalityResponse
 	err = json.NewDecoder(res.Body).Decode(&localityList)
-	if err != nil {
-		return nil, err
-	}
-	err = res.Body.Close()
 	if err != nil {
 		return nil, err
 	}
