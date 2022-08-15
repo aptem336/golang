@@ -26,7 +26,7 @@ func NewClient(
 
 func (client *Client) GetLocalityList(localityRequest *api.LocalityRequest) ([]api.LocalityResponse, error) {
 	url := fmt.Sprintf(
-		"%s/geo/locality/search/?term%s&ISO=%s&limit=%d",
+		"%s/geo/locality/search/?term=%s&ISO=%s&limit=%d",
 		client.baseURL,
 		localityRequest.Term,
 		localityRequest.ISO,
